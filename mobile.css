@@ -49,3 +49,11 @@ img, video { max-width: 100%; height: auto; }
 @media (max-width: 600px) {
   .progress-indicator { font-size: 12px !important; }
 }
+/* Make content column fill the phone screen width */
+@media (max-width: 600px) {
+  .max-w-2xl { max-width: 100% !important; }
+  .overlay-pattern { display: none !important; }   /* removes the subtle grid on small screens */
+  .text-gray-300, .text-white { line-height: 1.35 !important; }
+  .mb-8 { margin-bottom: 1rem !important; }        /* tighten spacing */
+  .bottom-8 { bottom: 1rem !important; }           /* bring footer up a bit */
+}
