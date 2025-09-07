@@ -1,0 +1,51 @@
+/* ===== Mobile-friendly overrides for 16:9 slides ===== */
+
+/* Make the slide scale to the screen while preserving 16:9 */
+html, body { height: 100%; }
+body { margin: 0; background: #000; }
+
+.slide {
+  /* Scale slide to fit viewport width by default */
+  width: 100vw !important;
+  height: 56.25vw !important;          /* 9/16 of width */
+  max-height: 100vh !important;
+  max-width: 177.78vh !important;       /* 16/9 of height */
+  margin: 0 auto;
+  position: relative;
+}
+
+/* If the screen is wider than 16:9, fit by height instead */
+@media (min-aspect-ratio: 16/9) {
+  .slide {
+    height: 100vh !important;
+    width: 177.78vh !important;        /* 16/9 of height */
+  }
+}
+
+/* Images and media scale nicely */
+img, video { max-width: 100%; height: auto; }
+
+/* Typography scales on small screens */
+.title-text,
+.text-5xl { font-size: clamp(1.8rem, 6.5vw, 3.2rem) !important; }
+
+.text-3xl { font-size: clamp(1.2rem, 5vw, 2rem) !important; }
+.text-2xl { font-size: clamp(1.1rem, 4.4vw, 1.6rem) !important; }
+.text-lg  { font-size: clamp(1rem, 3.8vw, 1.25rem) !important; }
+
+/* Trim some padding on phones */
+@media (max-width: 600px) {
+  .p-10 { padding: 1rem !important; }
+  .p-4  { padding: 0.75rem !important; }
+}
+
+/* Hide heavy decorative imagery on very small screens */
+@media (max-width: 600px) {
+  .image-overlay,
+  .engine-image { display: none !important; }
+}
+
+/* Keep small UI chrome readable */
+@media (max-width: 600px) {
+  .progress-indicator { font-size: 12px !important; }
+}
