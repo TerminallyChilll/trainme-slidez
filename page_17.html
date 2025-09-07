@@ -1,0 +1,171 @@
+<!DOCTYPE html><html><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com"></script><style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+        .slide {
+            width: 1280px;
+            height: 720px;
+            position: relative;
+        }
+        .gradient-bg {
+            background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+        }
+        .title-text {
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        .highlight {
+            color: #FFD700;
+        }
+        .warning {
+            color: #FF4136;
+        }
+        .overlay-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        .accent-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #FFD700 0%, #FF4136 100%);
+        }
+        .mistake-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-left: 4px solid #FF4136;
+            transition: all 0.3s ease;
+        }
+        .mistake-card:hover {
+            transform: translateX(5px);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        .warning-icon {
+            color: #FF4136;
+        }
+        .progress-indicator {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+</style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.absolute{position:absolute}.relative{position:relative}.bottom-8{bottom:2rem}.left-16{left:4rem}.mx-3{margin-left:0.75rem;margin-right:0.75rem}.mb-1{margin-bottom:0.25rem}.mb-6{margin-bottom:1.5rem}.mr-2{margin-right:0.5rem}.mr-4{margin-right:1rem}.mt-0{margin-top:0px}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.flex{display:flex}.grid{display:grid}.h-1{height:0.25rem}.w-24{width:6rem}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.items-start{align-items:flex-start}.items-center{align-items:center}.gap-4{gap:1rem}.rounded-lg{border-radius:0.5rem}.border{border-width:1px}.border-yellow-500{--tw-border-opacity:1;border-color:rgb(234 179 8 / var(--tw-border-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-yellow-500{--tw-bg-opacity:1;background-color:rgb(234 179 8 / var(--tw-bg-opacity, 1))}.bg-opacity-20{--tw-bg-opacity:0.2}.p-10{padding:2.5rem}.p-4{padding:1rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-4xl{font-size:2.25rem;line-height:2.5rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.font-bold{font-weight:700}.font-semibold{font-weight:600}.text-gray-300{--tw-text-opacity:1;color:rgb(209 213 219 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.text-yellow-500{--tw-text-opacity:1;color:rgb(234 179 8 / var(--tw-text-opacity, 1))}</style></head>
+<body class="">
+<div class="slide gradient-bg flex flex-col p-10 relative">
+<!-- Accent bar at top -->
+<div class="accent-bar"></div>
+<!-- Pattern overlay -->
+<div class="overlay-pattern"></div>
+<!-- Header -->
+<div class="mb-6">
+<h1 class="title-text text-4xl font-bold text-white">Common Mistakes to Avoid</h1>
+<div class="w-24 h-1 bg-red-500 mt-2"></div>
+</div>
+<!-- Main content -->
+<div class="grid grid-cols-2 gap-4">
+<!-- Mistake 1 -->
+<div class="mistake-card p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-wrench text-3xl warning-icon"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Over-tightening Bolts</h3>
+<p class="text-gray-300 mb-1">Strips threads or cracks housing, requiring costly repairs.</p>
+<div class="flex items-center mt-0">
+<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+<p class="text-sm text-gray-400">Follow torque specifications exactly (15-25 Nm)</p>
+</div>
+</div>
+</div>
+<!-- Mistake 2 -->
+<div class="mistake-card p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-plug text-3xl warning-icon"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Forcing Electrical Connections</h3>
+<p class="text-gray-300 mb-1">Bends pins or damages connectors, causing poor contact.</p>
+<div class="flex items-center mt-0">
+<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+<p class="text-sm text-gray-400">Clean connections before disassembly</p>
+</div>
+</div>
+</div>
+<!-- Mistake 3 -->
+<div class="mistake-card p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-broom text-3xl warning-icon"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Skipping Surface Cleaning</h3>
+<p class="text-gray-300 mb-1">Compromises gasket seal, leading to leaks &amp; reduced performance.</p>
+<div class="flex items-center mt-0">
+<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+<p class="text-sm text-gray-400">Clean turbo housing thoroughly with wire brush</p>
+</div>
+</div>
+</div>
+<!-- Mistake 4 -->
+<div class="mistake-card p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-hourglass-half text-3xl warning-icon"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Rushing the Installation</h3>
+<p class="text-gray-300 mb-1">Increases errors or missed steps, resulting in poor performance.</p>
+<div class="flex items-center mt-0">
+<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+<p class="text-sm text-gray-400">Take your time to ensure precision</p>
+</div>
+</div>
+</div>
+<!-- Mistake 5 -->
+<div class="mistake-card p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-vial text-3xl warning-icon"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Inadequate Testing</h3>
+<p class="text-gray-300 mb-1">Leads to unresolved issues or premature actuator failure.</p>
+<div class="flex items-center mt-0">
+<i class="fas fa-exclamation-triangle text-yellow-500 mr-2"></i>
+<p class="text-sm text-gray-400">Complete both static tests and road test verification</p>
+</div>
+</div>
+</div>
+<!-- Pro Tip -->
+<div class="bg-yellow-500 bg-opacity-20 border border-yellow-500 p-4 rounded-lg flex items-start">
+<div class="mr-4 mt-1">
+<i class="fas fa-lightbulb text-3xl text-yellow-500"></i>
+</div>
+<div>
+<h3 class="text-xl font-semibold text-white mb-1">Pro Tip</h3>
+<p class="text-gray-300">Document entire process with photos for future reference.</p>
+</div>
+</div>
+</div>
+<!-- Footer information -->
+<div class="absolute bottom-8 left-16 flex items-center text-gray-400">
+<i class="fas fa-user-cog mr-2"></i>
+<span>Service Training Department</span>
+<span class="mx-3">|</span>
+<i class="far fa-calendar-alt mr-2"></i>
+<span>2025-09-06</span>
+</div>
+<!-- Progress indicator -->
+<div class="progress-indicator">
+<span>17</span> / 18
+        </div>
+</div>
+</body></html>

@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Viewer — Phone Slides</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <style>
+    :root { color-scheme: dark; }
+    body { margin:0; background:#000; color:#cfd3dc; font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .wrap { padding:18px; max-width:700px; margin:0 auto; }
+    .card { background:#0f1016; border:1px solid #1f2330; border-radius:14px; padding:14px 16px; }
+    label { display:block; font-size:14px; color:#9aa0b4; margin-bottom:6px; }
+    input[type="text"] { width:100%; background:#0a0b10; border:1px solid #262a38; color:#fff; padding:10px 12px; border-radius:10px; }
+    button { width:100%; margin-top:10px; background:#3a3aff; border:0; color:#fff; font-weight:600; padding:10px 14px; border-radius:10px; cursor:pointer; }
+    .status { font-size:13px; color:#9aa0b4; margin-top:10px; text-align:center; }
+    .hide { display:none; }
+    iframe { width:100vw; height:100vh; border:0; display:block; }
+    .center { text-align:center; }
+  </style>
+</head>
+<body>
+
+<!-- Join screen -->
+<div id="join" class="wrap">
+  <h2 class="center">Join the Session</h2>
+  <div class="card">
+    <label for="code">Session code (from presenter)</label>
+    <input id="code" type="text" placeholder="e.g. 4821" />
+    <button id="joinBtn">Join</button>
+    <div class="status" id="joinStatus">You’ll follow the presenter automatically.</div>
+  </div>
+  <p class="status">Tip: you can also open <code>viewer.html?code=YOURCODE</code> directly.</p>
+</div>
+
+<!-- Slide display -->
+<iframe id="frame" class="hide" title="Slide"></iframe>
+
+<script type="module">
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  // 1) Paste your Supabase credentials (same as presenter.html)
+  const SUPABASE_URL = "https://kdnojgrxlvkxeefvfxwy.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkbm9qZ3J4bHZreGVlZnZmeHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzYwMTYsImV4cCI6MjA3Mjg1MjAxNn0.16WLpynFUoF-BvE2SaPL3eWwNhbKFfeSNH1CV3MstXw";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // 2) Your slide filenames (must match presenter.html)
+  const slides = [
+    "page_1.html",
+    "page_2.html",
+    "page_3.html",
+    "page_4.html",
+    "page_5.html",
+    "page_6.html",
+    "page_7.html",
+    "page_8.html",
+    "page_9.html",
+    "page_10.html",
+    "page_11.html",
+    "page_12.html",
+    "page_13.html",
+    "page_14.html",
+    "page_15.html",
+    "page_16.html",
+    "page_17.html",
+    "page_18.html"
+  ];
+
+
+  const joinView = document.getElementById("join");
+  const joinBtn = document.getElementById("joinBtn");
+  const joinStatus = document.getElementById("joinStatus");
+  const codeInput = document.getElementById("code");
+  const frame = document.getElementById("frame");
+
+  let channel = null;
+
+  // Helper: get code from URL (?code=XXXX)
+  function getCodeFromURL(){
+    const p = new URLSearchParams(location.search);
+    return (p.get("code") || "").trim();
+  }
+
+  function showSlide(index){
+    const i = Math.max(0, Math.min(slides.length - 1, Number(index) || 0));
+    // Prevent back/forward by user: we always set the src when presenter broadcasts
+    frame.src = slides[i];
+  }
+
+  async function joinSession(code){
+    // Clean up previous subscription if any
+    if(channel){ try { await channel.unsubscribe(); } catch {} }
+
+    channel = supabase.channel(`slides-${code}`, {
+      config: { broadcast: { ack: true } }
+    });
+
+    // Subscribe and show the viewer frame
+    await channel.subscribe((status) => {
+      if(status === "SUBSCRIBED"){
+        joinStatus.textContent = "Connected. Waiting for presenter…";
+      } else {
+        joinStatus.textContent = `Status: ${status}`;
+      }
+    });
+
+    // Handle broadcasts from presenter
+    channel.on("broadcast", { event: "slide" }, ({ payload }) => {
+      // payload: { index: number }
+      joinView.classList.add("hide");
+      frame.classList.remove("hide");
+      showSlide(payload.index);
+    });
+  }
+
+  // Join button
+  joinBtn.addEventListener("click", async () => {
+    const code = (codeInput.value || "").trim();
+    if(!code){ alert("Enter the session code"); return; }
+    await joinSession(code);
+  });
+
+  // Auto-join if ?code= is present
+  const autoCode = getCodeFromURL();
+  if(autoCode){
+    codeInput.value = autoCode;
+    joinSession(autoCode);
+  }
+
+  // Keep screen awake during session (where supported)
+  if("wakeLock" in navigator){
+    try { await navigator.wakeLock.request("screen"); } catch {}
+  }
+</script>
+</body>
+</html>

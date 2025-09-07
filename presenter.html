@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Presenter — Phone Slides</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,Arial,sans-serif;margin:0;padding:24px;background:#0b0b10;color:#e8e8ef}
+    .wrap{max-width:900px;margin:0 auto}
+    .card{background:#15151f;border:1px solid #252538;border-radius:16px;padding:16px 20px;margin-bottom:16px}
+    .row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+    label{font-size:14px;color:#bdbddd}
+    input[type="text"]{background:#0f0f16;border:1px solid #2c2c3a;border-radius:10px;padding:10px 12px;color:#fff;min-width:180px}
+    button{background:#3a3aff;border:0;color:#fff;border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer}
+    button.secondary{background:#2a2a39}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .status{font-size:13px;color:#9aa0b4}
+    iframe{width:100%;height:65vh;border:1px solid #2c2c3a;border-radius:16px;background:#000}
+    .pill{display:inline-block;background:#23233a;padding:6px 10px;border-radius:999px;font-size:12px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Presenter Control</h1>
+
+  <div class="card">
+    <div class="row">
+      <div>
+        <label>Session code</label><br/>
+        <input id="session" type="text" placeholder="e.g. 4821" />
+      </div>
+      <div>
+        <label>Start at slide #</label><br/>
+        <input id="startIndex" type="text" value="1" />
+      </div>
+      <div>
+        <label>&nbsp;</label><br/>
+        <button id="startBtn">Start session</button>
+        <span class="status" id="sessionStatus"></span>
+      </div>
+    </div>
+    <p class="status" style="margin-top:8px">
+      Audience joins at: <span class="pill">viewer.html?code=<span id="codeEcho">—</span></span>
+    </p>
+  </div>
+
+  <div class="card">
+    <div class="row">
+      <button id="prevBtn" class="secondary" disabled>◀︎ Prev</button>
+      <button id="nextBtn" disabled>Next ▶︎</button>
+      <span class="status">Current slide: <strong id="idxEcho">—</strong></span>
+    </div>
+  </div>
+
+  <iframe id="slideFrame" title="Slide preview"></iframe>
+
+  <div class="card">
+    <p class="status">
+      Tip: Put your slide HTML files in this same folder (e.g. <code>page_1.html</code> … <code>page_10.html</code>). 
+      Edit the list below if your names differ.
+    </p>
+  </div>
+</div>
+
+<script type="module">
+  // 1) Import Supabase client (CDN ESM)
+  import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+  // 2) TODO: paste your Supabase URL and anon key
+  const SUPABASE_URL = "https://kdnojgrxlvkxeefvfxwy.supabase.co";
+  const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imtkbm9qZ3J4bHZreGVlZnZmeHd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTcyNzYwMTYsImV4cCI6MjA3Mjg1MjAxNn0.16WLpynFUoF-BvE2SaPL3eWwNhbKFfeSNH1CV3MstXw";
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // 3) Configure your slide filenames here:
+  const slides = [
+    "page_1.html",
+    "page_2.html",
+    "page_3.html",
+    "page_4.html",
+    "page_5.html",
+    "page_6.html",
+    "page_7.html",
+    "page_8.html",
+    "page_9.html",
+    "page_10.html",
+    "page_11.html",
+    "page_12.html",
+    "page_13.html",
+    "page_14.html",
+    "page_15.html",
+    "page_16.html",
+    "page_17.html",
+    "page_18.html"
+  ];
+
+  // ---- UI elements
+  const sessionInput = document.getElementById("session");
+  const startIndexInput = document.getElementById("startIndex");
+  const startBtn = document.getElementById("startBtn");
+  const prevBtn = document.getElementById("prevBtn");
+  const nextBtn = document.getElementById("nextBtn");
+  const slideFrame = document.getElementById("slideFrame");
+  const idxEcho = document.getElementById("idxEcho");
+  const sessionStatus = document.getElementById("sessionStatus");
+  const codeEcho = document.getElementById("codeEcho");
+
+  let channel = null;
+  let idx = 0;
+
+  function loadSlide(i){
+    idx = Math.max(0, Math.min(slides.length - 1, i));
+    slideFrame.src = slides[idx];
+    idxEcho.textContent = (idx + 1) + " / " + slides.length;
+    prevBtn.disabled = (idx === 0);
+    nextBtn.disabled = (idx === slides.length - 1);
+  }
+
+  async function startSession(){
+    const code = (sessionInput.value || "").trim();
+    let startAt = parseInt(startIndexInput.value, 10);
+    if(!code){ alert("Enter a session code (e.g. 4821)"); return; }
+    if(Number.isNaN(startAt) || startAt < 1) startAt = 1;
+
+    // Close old channel if any
+    if(channel){ try { await channel.unsubscribe(); } catch {} }
+
+    // Create a broadcast channel unique to this session code
+    channel = supabase.channel(`slides-${code}`, {
+      config: { broadcast: { ack: true } }
+    });
+
+    // Subscribe (required to be able to broadcast)
+    await channel.subscribe((status) => {
+      sessionStatus.textContent = (status === "SUBSCRIBED")
+        ? "Live (audience can join)"
+        : `Status: ${status}`;
+    });
+
+    // Load starting slide locally and broadcast it
+    loadSlide(startAt - 1);
+    codeEcho.textContent = encodeURIComponent(code);
+
+    // Let viewers know a new session is started & which slide index to show
+    await channel.send({
+      type: "broadcast",
+      event: "slide",
+      payload: { index: idx }
+    });
+  }
+
+  async function go(delta){
+    const next = Math.max(0, Math.min(slides.length - 1, idx + delta));
+    if(next === idx) return;
+    loadSlide(next);
+    if(channel){
+      await channel.send({
+        type: "broadcast",
+        event: "slide",
+        payload: { index: idx }
+      });
+    }
+  }
+
+  startBtn.addEventListener("click", startSession);
+  prevBtn.addEventListener("click", () => go(-1));
+  nextBtn.addEventListener("click", () => go(1));
+
+  // Keyboard shortcuts
+  window.addEventListener("keydown", (e) => {
+    if(e.key === "ArrowRight") go(1);
+    if(e.key === "ArrowLeft") go(-1);
+  });
+
+  // Initial state
+  loadSlide(0);
+</script>
+</body>
+</html>
