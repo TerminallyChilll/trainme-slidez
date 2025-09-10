@@ -36,7 +36,8 @@ body {
   margin: 0;
   padding: 1rem 1rem 5rem 1rem; /* Added 5rem bottom padding for footer space */
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden; /* Only hide horizontal overflow */
+  overflow-y: auto; /* Allow vertical scrolling by default */
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
@@ -87,20 +88,26 @@ img, video {
 
 /* Mobile-specific adjustments */
 @media (max-width: 768px) {
-  .slide { padding: 0.75rem 0.75rem 4rem 0.75rem; } /* Added 4rem bottom padding for footer space on mobile */
+  .slide { 
+    padding: 1rem 1rem 2rem 1rem; /* Reduced bottom padding from 4rem to 2rem */
+    height: auto; /* Allow natural content height */
+    min-height: 100vh; /* Maintain minimum viewport height */
+    overflow-y: auto; /* Enable vertical scrolling */
+    overflow-x: hidden; /* Keep horizontal overflow hidden */
+  }
 
   /* Reduce excessive padding on small screens */
-  .p-10 { padding: 1rem !important; }
-  .p-8  { padding: 0.75rem !important; }
-  .p-6  { padding: 0.5rem !important; }
-  .p-4  { padding: 0.375rem !important; }
-  .p-3  { padding: 0.25rem !important; }
+  .p-10 { padding: 1.25rem !important; } /* Slightly less aggressive reduction */
+  .p-8  { padding: 1rem !important; }
+  .p-6  { padding: 0.75rem !important; }
+  .p-4  { padding: 0.5rem !important; }
+  .p-3  { padding: 0.375rem !important; }
 
-  /* Adjust margins */
-  .mb-8 { margin-bottom: 0.75rem !important; }
-  .mb-6 { margin-bottom: 0.5rem !important; }
-  .mb-4 { margin-bottom: 0.375rem !important; }
-  .mt-6 { margin-top: 0.5rem !important; }
+  /* Adjust margins for better mobile spacing */
+  .mb-8 { margin-bottom: 1rem !important; } /* Less aggressive reduction */
+  .mb-6 { margin-bottom: 0.75rem !important; }
+  .mb-4 { margin-bottom: 0.5rem !important; }
+  .mt-6 { margin-top: 0.75rem !important; }
 
   /* Better touch targets */
   button, .clickable {
@@ -123,34 +130,34 @@ img, video {
   .text-gray-300,
   .text-white { line-height: 1.4 !important; }
 
-  /* Bring footer elements closer */
-  .bottom-8 { bottom: 0.5rem !important; }
+  /* Better footer positioning for scrollable content */
+  .bottom-8 { bottom: 1rem !important; }
 
-  /* Make progress indicator smaller */
+  /* Make progress indicator smaller and better positioned */
   .progress-indicator {
-    font-size: 11px;
-    bottom: 0.25rem;
-    right: 0.5rem;
+    font-size: 12px; /* Slightly larger for better readability */
+    bottom: 0.5rem;
+    right: 1rem;
   }
 
   /* Adjust grid layouts for mobile */
   .grid-cols-3,
   .grid-cols-2 {
     grid-template-columns: 1fr !important;
-    gap: 0.5rem !important;
+    gap: 0.75rem !important; /* Slightly more space between grid items */
   }
 
   /* Stack flex rows on mobile */
   .flex-row { flex-direction: column !important; }
 
-  /* Reduce space between elements */
+  /* Reduce space between elements but keep readable */
   .space-x-12 > :not([hidden]) ~ :not([hidden]),
   .space-x-8  > :not([hidden]) ~ :not([hidden]),
   .space-x-6  > :not([hidden]) ~ :not([hidden]),
   .space-x-4  > :not([hidden]) ~ :not([hidden]) {
     margin-left: 0 !important;
     margin-right: 0 !important;
-    margin-top: 0.5rem !important;
+    margin-top: 0.75rem !important; /* Slightly more breathing room */
   }
 }
 
