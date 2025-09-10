@@ -1,0 +1,216 @@
+/* ===== Enhanced Mobile-friendly overrides for slides ===== */
+
+/* Prevent zoom and scrolling issues + better touch ergonomics */
+html, body {
+  height: 100vh;
+  overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  padding: 0 env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+  background: #000;
+  font-size: 16px; /* Prevent iOS zoom on inputs */
+  line-height: 1.4;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+/* Prefer dynamic viewport units when available */
+@supports (height: 100dvh) {
+  html, body { height: 100dvh; }
+}
+@supports (height: 100svh) {
+  html, body { height: 100svh; }
+}
+
+/* Responsive slide container — full-viewport default */
+.slide {
+  width: 100vw;
+  height: 100vh;
+  max-height: 100vh;
+  max-width: 100vw;
+  margin: 0;
+  padding: 1rem;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Optional: 16:9 preserving variant — add class "slide-16x9" on slides that must stay 16:9 */
+.slide-16x9 {
+  width: 100vw;
+  height: calc(100vw * 9 / 16);
+  max-height: 100vh;
+  max-width: calc(100vh * 16 / 9);
+  margin: 0 auto;
+}
+@supports (aspect-ratio: 16 / 9) {
+  .slide-16x9 {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-height: 100vh;
+  }
+}
+
+/* Use dynamic viewport for slides when supported */
+@supports (height: 100dvh) {
+  .slide { height: 100dvh; max-height: 100dvh; }
+}
+@supports (height: 100svh) {
+  .slide { height: 100svh; max-height: 100svh; }
+}
+
+/* Images and media scale nicely */
+img, video {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+/* Typography scales responsively */
+.title-text,
+.text-5xl { font-size: clamp(1.5rem, 5vw, 2.5rem); }
+
+.text-4xl { font-size: clamp(1.3rem, 4.5vw, 2rem); }
+.text-3xl { font-size: clamp(1.2rem, 4vw, 1.8rem); }
+.text-2xl { font-size: clamp(1.1rem, 3.5vw, 1.5rem); }
+.text-xl  { font-size: clamp(1rem, 3vw, 1.25rem); }
+.text-lg  { font-size: clamp(0.95rem, 2.8vw, 1.125rem); }
+.text-sm  { font-size: clamp(0.85rem, 2.5vw, 0.875rem); }
+
+/* Mobile-specific adjustments */
+@media (max-width: 768px) {
+  .slide { padding: 0.75rem; }
+
+  /* Reduce excessive padding on small screens */
+  .p-10 { padding: 1rem !important; }
+  .p-8  { padding: 0.75rem !important; }
+  .p-6  { padding: 0.5rem !important; }
+  .p-4  { padding: 0.375rem !important; }
+  .p-3  { padding: 0.25rem !important; }
+
+  /* Adjust margins */
+  .mb-8 { margin-bottom: 0.75rem !important; }
+  .mb-6 { margin-bottom: 0.5rem !important; }
+  .mb-4 { margin-bottom: 0.375rem !important; }
+  .mt-6 { margin-top: 0.5rem !important; }
+
+  /* Better touch targets */
+  button, .clickable {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1rem;
+  }
+
+  /* Hide decorative/heavy elements on very small screens */
+  .image-overlay,
+  .engine-image { display: none !important; }
+
+  /* Fill width */
+  .max-w-2xl { max-width: 100% !important; }
+
+  /* Hide subtle patterns that may interfere */
+  .overlay-pattern { display: none !important; }
+
+  /* Improve line height for readability */
+  .text-gray-300,
+  .text-white { line-height: 1.4 !important; }
+
+  /* Bring footer elements closer */
+  .bottom-8 { bottom: 0.5rem !important; }
+
+  /* Make progress indicator smaller */
+  .progress-indicator {
+    font-size: 11px;
+    bottom: 0.25rem;
+    right: 0.5rem;
+  }
+
+  /* Adjust grid layouts for mobile */
+  .grid-cols-3,
+  .grid-cols-2 {
+    grid-template-columns: 1fr !important;
+    gap: 0.5rem !important;
+  }
+
+  /* Stack flex rows on mobile */
+  .flex-row { flex-direction: column !important; }
+
+  /* Reduce space between elements */
+  .space-x-12 > :not([hidden]) ~ :not([hidden]),
+  .space-x-8  > :not([hidden]) ~ :not([hidden]),
+  .space-x-6  > :not([hidden]) ~ :not([hidden]),
+  .space-x-4  > :not([hidden]) ~ :not([hidden]) {
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    margin-top: 0.5rem !important;
+  }
+}
+
+/* Tablet adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .slide { padding: 1.5rem; }
+  .title-text, .text-5xl { font-size: clamp(2rem, 4vw, 2.8rem); }
+}
+
+/* Larger screens */
+@media (min-width: 1025px) {
+  .slide {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+}
+
+/* ===== Centralized shared slide styles ===== */
+.gradient-bg {
+  background: linear-gradient(135deg, #333333 0%, #1a1a1a 100%);
+}
+
+.title-text {
+  text-shadow: 2px 2px 4px rgba(0,0,0,.5);
+  font-weight: bold;
+}
+
+.highlight { color: #FFD700; }
+.warning  { color: #FF4136; }
+
+.overlay-pattern {
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none;
+}
+
+.accent-bar {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 8px;
+  background: linear-gradient(90deg, #FFD700 0%, #FF4136 100%);
+}
+
+.progress-indicator {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  font-size: 14px;
+  color: rgba(255,255,255,.6);
+  z-index: 10;
+}
+
+/* Enhanced iOS support with small-viewport units */
+@supports (height: 100svh) {
+  .slide { height: 100svh; max-height: 100svh; }
+}
+
+/* Respect user motion preference (nice for subtle transitions you may add) */
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
